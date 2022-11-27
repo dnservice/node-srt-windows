@@ -79,14 +79,14 @@ function buildWin32() {
     process.exit(openssl.status);
   }
 
-  console.log("Building pthreads");
-  const pthreads = spawnSync('vcpkg', [ 'install', 'pthreads', '--triplet', `${process.arch}-windows` ], { cwd: process.env.VCPKG_ROOT, shell: true } );
-  if (pthreads.stdout)
-    console.log(pthreads.stdout.toString());
-  if (pthreads.status) {
-    console.log(pthreads.stderr.toString());
-    process.exit(pthreads.status);
-  }
+  // console.log("Building pthreads");
+  // const pthreads = spawnSync('vcpkg', [ 'install', 'pthreads', '--triplet', `${process.arch}-windows` ], { cwd: process.env.VCPKG_ROOT, shell: true } );
+  // if (pthreads.stdout)
+  //   console.log(pthreads.stdout.toString());
+  // if (pthreads.status) {
+  //   console.log(pthreads.stderr.toString());
+  //   process.exit(pthreads.status);
+  // }
 
   console.log("Integrate vcpkg build system");
   const integrate = spawnSync('vcpkg', [ 'integrate', 'install' ], { cwd: process.env.VCPKG_ROOT, shell: true } );
@@ -98,7 +98,7 @@ function buildWin32() {
   }
 
   console.log("Running cmake generator");
-  const generator = spawnSync('cmake', [ srtSourcePath, '-DCMAKE_BUILD_TYPE=Release', '-G"Visual Studio 16 2019"', '-A', process.arch, '-DCMAKE_TOOLCHAIN_FILE="%VCPKG_ROOT%\\scripts\\buildsystems\\vcpkg.cmake' ], { cwd: buildDir, shell: true } );
+  const generator = spawnSync('cmake', [ srtSourcePath, '-DCMAKE_BUILD_TYPE=Release', '-DENABLE_STDCXX_SYNC=ON','-G"Visual Studio 16 2019"', '-A', process.arch, '-DCMAKE_TOOLCHAIN_FILE="%VCPKG_ROOT%\\scripts\\buildsystems\\vcpkg.cmake' ], { cwd: buildDir, shell: true } );
   if (generator.stdout)
     console.log(generator.stdout.toString());
   if (generator.status) {
